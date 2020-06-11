@@ -71,6 +71,32 @@ def complete_graph(n):
     return Graph(vertices=vertices, edges=edges)
 
 
+def grid_graph(n):
+    vertices = list(range(n*n))
+    edges = []
+    for i in range(n):
+        for j in range(n):
+            if i > 0:
+                edges.append((i*n+j, (i-1)*n+(j)))
+            if j > 0:
+                edges.append((i*n+j, (i)*n+(j-1)))
+            if i < n-1:
+                edges.append((i*n+j, (i+1)*n+(j)))
+            if j < n-1:
+                edges.append((i*n+j, (i)*n+(j+1)))
+    print(vertices)
+    print(edges)
+    return Graph(vertices=vertices, edges=edges)
+
+
+def grid_pos(n):
+    pos = dict()
+    for i in range(n):
+        for j in range(n):
+            pos[i*n+j] = (i*10, j*10)
+    return pos
+
+
 def random_walk(G, T):
     diff = G.vertices - T.vertices
     path = []
@@ -85,7 +111,6 @@ def random_walk(G, T):
 def remove_cycles(path):
     no_cycle = False
     while not no_cycle:
-        print(path)
         no_cycle = True
         for i in range(len(path)):
             for j in range(i+1, len(path)):
@@ -96,12 +121,10 @@ def remove_cycles(path):
                     break
             if not no_cycle:
                 break
-    print(path)
     return path
 
-
-G = complete_graph(8)
-print(G)
+N = 10
+G = grid_graph(N)
 
 
 def wilson(G):
@@ -114,10 +137,14 @@ def wilson(G):
         T.add_path(path)
     return T
 
-T = wilson(G)
-plt.subplot(121)
-nx.draw(G.to_nx_graph(), with_labels=True, font_weight='bold')
-plt.subplot(122)
-nx.draw_planar(T.to_nx_graph(), with_labels=True, font_weight='bold')
-plt.show()
 
+T = wilson(G)
+pos = grid_pos(N)
+print(T.vertices)
+print(pos)
+G = G.to_nx_graph()
+nx.draw(G, pos=pos, node_size=50)
+G.remove_edges_from(list(G.edges))
+G.add_edges_from(T.to_nx_graph().edges)
+nx.draw(G, pos=pos, node_size=50, edge_color="#FF0000", width=3.0)
+plt.show()
