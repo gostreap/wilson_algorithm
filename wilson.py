@@ -97,38 +97,34 @@ def grid_pos(n):
 
 
 def triangle_coordinate_to_node(i, j):
-    return int(j*(j+1)/2+i)
+    return int(i*(i+1)/2+j)
 
 
 def triangle_graph(n):
     vertices = list(range(int(n*(n+1)/2)))
     edges = []
-    for j in range(n):
-        for i in range(j+1):
-            if i > 0 and j > 0:
-                edges.append((triangle_coordinate_to_node(i,j), triangle_coordinate_to_node(i-1,j-1)))
-            if j > 0 and j != i:
-                edges.append((triangle_coordinate_to_node(i,j), triangle_coordinate_to_node(i,j-1)))
-            if i > 0:
-                edges.append((triangle_coordinate_to_node(i,j), triangle_coordinate_to_node(i-1,j)))
-            if i < j:
-                edges.append((triangle_coordinate_to_node(i,j), triangle_coordinate_to_node(i+1,j)))
-            if j < n-1:
+    for i in range(n):
+        for j in range(i+1):
+            if j > 0:
+                edges.append((triangle_coordinate_to_node(i, j),
+                              triangle_coordinate_to_node(i, j-1)))
+            if j < i:
                 edges.append((triangle_coordinate_to_node(i, j),
                               triangle_coordinate_to_node(i, j+1)))
-            if i < n-1 and j < n-1:
+            if i < n-1:
+                edges.append((triangle_coordinate_to_node(i, j),
+                              triangle_coordinate_to_node(i+1, j)))
+            if j < i+1 and i < n-1:
                 edges.append((triangle_coordinate_to_node(i, j),
                               triangle_coordinate_to_node(i+1, j+1)))
-    # print(vertices)
-    # print(edges, len(edges))
     return Graph(vertices=vertices, edges=edges)
 
 
 def triangle_pos(n):
     pos = dict()
-    for j in range(n):
-        for i in range(j+1):
-            pos[triangle_coordinate_to_node(i, j)] = (i, -j)
+    for i in range(n):
+        for j in range(i+1):
+            pos[triangle_coordinate_to_node(i, j)] = (-i, j)
     return pos
 
 
