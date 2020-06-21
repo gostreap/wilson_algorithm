@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from random import sample
+import math
 
 
 class Graph:
@@ -70,6 +71,16 @@ def complete_graph(n):
         for j in range(n):
             edges.append((i, j))
     return Graph(vertices=vertices, edges=edges)
+
+
+def complete_pos(n):
+    pos = dict()
+    module = n
+    for i in range(n):
+        arg1 = module * math.cos(2 * math.pi * i / n)
+        arg2 = module * math.sin(2 * math.pi * i / n)
+        pos[i] = (arg1, arg2)
+    return pos
 
 
 def grid_graph(n):
@@ -167,9 +178,9 @@ def wilson(G):
 
 
 if __name__ == "__main__":
-    N = 15
-    G = triangle_graph(N)
-    pos = triangle_pos(N)
+    N = 50
+    G = complete_graph(N)
+    pos = complete_pos(N)
     print(pos)
     # G = grid_graph(N)
     # pos = grid_pos(N)
